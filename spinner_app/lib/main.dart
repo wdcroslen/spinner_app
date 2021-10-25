@@ -52,29 +52,32 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
 
   int selected = 0;
   int rotation_count=10;
-  List<int>point=[0,0,0,0,0];
+  List<int>point=[0,0,0,0,0,0,0,0,0,0,0];
+  var map = {'Item 1': 0,'Item 2': 0,'Item 3': 0,'Item 4': 0};
   List<String> items = [
     'Item 1',
     'Item 2',
     'Item 3',
-    'Item 4',
-    'Item 5'
+    'Item 4'
   ];
 
   @override
   Widget build(BuildContext context) {
 
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Spin Wheel'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(child:Padding(
         padding: const EdgeInsets.all(20.0),
         child: GestureDetector(
           onTap: () {
             setState(() {
               selected = Random().nextInt(items.length);
+              print(items[selected]);
+              print(map);
+              map.update(items[selected], (dynamic val) => ++val);
+              print(map);
               point[selected]=point[selected]+1;
               print("Selected value1 $selected ${point[selected]}");
             });
@@ -136,6 +139,7 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                             createAlertDialog(context).then((onValue){
                               setState(() {
                                 items[index] = onValue.toString();
+                                // map.putIfAbsent(map[items[index]], ()=> null);
                               });
                             });
                           }),
@@ -146,6 +150,7 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                               setState(() {
                                 if (items.length>2) {
                                   items.remove(items[index]);
+
                                 }
                               });
                             },
@@ -165,10 +170,19 @@ class _SpinWheelPageState extends State<SpinWheelPage> {
                   point.add(0);
                 });
               }, child: Text('Add')),
+
+              ElevatedButton(onPressed: () {
+                setState(() {
+                  for (int i =0; i<point.length; i++){
+                    point[i] = 0;
+                  }
+                });
+              }, child: Text('Clear Scores')),
             ],
           ),
         ),
       ),
+      )
     );
   }
 }
